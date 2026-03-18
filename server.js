@@ -119,6 +119,51 @@ class BinanceAPI {
             return { success: false, error: error.message };
         }
     }
+
+    static async getTicker(symbol) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/v3/ticker/24hr?symbol=${symbol}`);
+            return {
+                success: true,
+                data: response.data
+            };
+        } catch (error) {
+            console.error('Ticker Error:', error.response?.data || error.message);
+            return { success: false, error: error.message };
+        }
+    }
+
+    static async placeMarketOrder(apiKey, secret, symbol, side, usdtAmount) {
+        try {
+            const tickerResponse = await this.getTicker(symbol);
+            if (!tickerResponse.success) {
+                return { success: false, error: 'Failed to get market price' };
+            }
+
+            const currentPrice = parseFloat(tickerResponse.data.lastPrice);
+            const quantity = usdtAmount / currentPrice;
+
+            const params = {
+                symbol: symbol,
+                side: side,
+                type: 'MARKET',
+                quantity: quantity.toFixed(6)
+            };
+
+            const data = await this.makeRequest('/api/v3/order', 'POST', apiKey, secret, params);
+
+            return {
+                success: true,
+                orderId: data.orderId,
+                executedQty: parseFloat(data.executedQty),
+                price: currentPrice,
+                side: side
+            };
+        } catch (error) {
+            console.error('Order Error:', error.response?.data || error.message);
+            return { success: false, error: error.message };
+        }
+    }
 }
 
 const aiEngine = new AITradingEngine();
