@@ -1,0 +1,19 @@
+{
+  "name": "halal-ai-trading-bot",
+  "version": "1.0.0",
+  "description": "Halal AI Trading Bot - REAL MONEY Trading",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "echo 'Build complete - no compilation needed'"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "axios": "^1.6.2",
+    "crypto": "^1.0.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
